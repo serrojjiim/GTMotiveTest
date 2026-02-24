@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using GtMotive.Estimate.Microservice.Domain.Interfaces;
+using GtMotive.Estimate.Microservice.Domain.Repositories;
 using GtMotive.Estimate.Microservice.Infrastructure.Interfaces;
 using GtMotive.Estimate.Microservice.Infrastructure.Logging;
+using GtMotive.Estimate.Microservice.Infrastructure.Persistence;
 using GtMotive.Estimate.Microservice.Infrastructure.Telemetry;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -27,6 +29,8 @@ namespace GtMotive.Estimate.Microservice.Infrastructure
             {
                 services.AddScoped<ITelemetry, NoOpTelemetry>();
             }
+
+            services.AddSingleton<IVehicleRepository, InMemoryVehicleRepository>();
 
             return new InfrastructureBuilder(services);
         }
