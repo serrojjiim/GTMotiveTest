@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using GtMotive.Estimate.Microservice.Api.UseCases.CreateVehicle;
+using GtMotive.Estimate.Microservice.Api.UseCases.GetAvailableVehicles;
 using GtMotive.Estimate.Microservice.Domain.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -21,6 +22,19 @@ namespace GtMotive.Estimate.Microservice.Api.Controllers
         {
             _logger.LogInformation("POST /api/vehicles received");
             var presenter = await _mediator.Send(request);
+            return presenter.ActionResult;
+        }
+
+        /// <summary>
+        /// Gets all available vehicles.
+        /// </summary>
+        /// <returns>List of available vehicles.</returns>
+        [HttpGet("available")]
+        public async Task<IActionResult> GetAvailable()
+        {
+            _logger.LogDebug("Getting available vehicles.");
+
+            var presenter = await _mediator.Send(new GetAvailableVehiclesRequest());
             return presenter.ActionResult;
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using GtMotive.Estimate.Microservice.Domain.Entities;
 
@@ -22,5 +23,11 @@ namespace GtMotive.Estimate.Microservice.Domain.Repositories
         /// <param name="id">Vehicle id.</param>
         /// <returns>The vehicle or null.</returns>
         Task<Vehicle> GetById(Guid id);
+
+        /// <summary>
+        /// Get available vehicles.
+        /// </summary>
+        /// <returns>The list of available vehicles.</returns>
+        Task<IReadOnlyList<Vehicle>> GetAvailableVehicles();
     }
 }
