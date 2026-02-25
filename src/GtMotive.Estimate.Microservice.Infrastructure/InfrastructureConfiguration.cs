@@ -31,6 +31,7 @@ namespace GtMotive.Estimate.Microservice.Infrastructure
             }
 
             services.AddSingleton<IVehicleRepository, InMemoryVehicleRepository>();
+            services.AddSingleton<IRentalRepository, InMemoryRentalRepository>();
 
             return new InfrastructureBuilder(services);
         }

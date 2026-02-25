@@ -15,19 +15,12 @@ namespace GtMotive.Estimate.Microservice.Domain.Entities
         /// <param name="customerIdentifier">Customer id.</param>
         public Rental(Guid id, Guid vehicleId, string customerIdentifier)
         {
-            if (id == Guid.Empty)
-            {
-                throw new DomainException("Rental id can't be empty.");
-            }
-
-            if (vehicleId == Guid.Empty)
-            {
-                throw new DomainException("Vehicle id can't be empty.");
-            }
+            ValidateEmptyId(id, "Rental id");
+            ValidateEmptyId(vehicleId, "Vehicle id");
 
             if (string.IsNullOrWhiteSpace(customerIdentifier))
             {
-                throw new DomainException("Customer id required.");
+                throw new DomainException("Customer id  required.");
             }
 
             Id = id;
@@ -57,13 +50,45 @@ namespace GtMotive.Estimate.Microservice.Domain.Entities
         public DateTime StartDate { get; }
 
         /// <summary>
-        /// Gets or sets rental end date (null while active).
+        /// Gets rental end date (null while active).
         /// </summary>
-        public DateTime? EndDate { get; set; }
+        public DateTime? EndDate { get; private set; }
 
         /// <summary>
         /// Gets a value indicating whether rental is active.
         /// </summary>
         public bool IsActive => EndDate == null;
+
+        /// <summary>
+        /// Finish the rental setting end date.
+        /// </summary>
+        public void FinishRental()
+        {
+            if (!IsActive)
+            {
+                throw new DomainException(
+                    $"Rental '{Id}' is already finished (ended on {EndDate:yyyy-MM-dd HH:mm}).");
+            }
+
+            EndDate = DateTime.UtcNow;
+        }
+
+        /// <summary>
+        /// Checks if this rental belongs to the specified customer.
+        /// </summary>
+        /// <param name="customerIdentifier">customer id.</param>
+        /// <returns>True if the rental belongs to this customer.</returns>
+        public bool BelongsToCustomer(string customerIdentifier)
+        {
+            return string.Equals(CustomerIdentifier, customerIdentifier, StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static void ValidateEmptyId(Guid id, string name)
+        {
+            if (id == Guid.Empty)
+            {
+                throw new DomainException($"{name} can't be empty.");
+            }
+        }
     }
 }

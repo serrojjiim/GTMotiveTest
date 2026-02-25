@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace GtMotive.Estimate.Microservice.Api.UseCases.GetAvailableVehicles
 {
     /// <summary>
-    /// Response DTO for get available vehicles useCase.
+    /// Response DTO for get available vehicles use case.
     /// </summary>
     public sealed class GetAvailableVehiclesResponse
     {

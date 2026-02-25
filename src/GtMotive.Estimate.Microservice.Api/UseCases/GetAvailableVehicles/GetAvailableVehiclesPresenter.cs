@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace GtMotive.Estimate.Microservice.Api.UseCases.GetAvailableVehicles
 {
     /// <summary>
-    /// Presenter for get available vehicles useCase.
+    /// Presenter for get available vehicles use case.
     /// </summary>
     public sealed class GetAvailableVehiclesPresenter : IWebApiPresenter, IGetAvailableVehiclesOutputPort
     {

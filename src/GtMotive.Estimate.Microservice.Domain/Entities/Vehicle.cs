@@ -22,37 +22,11 @@ namespace GtMotive.Estimate.Microservice.Domain.Entities
         /// <param name="manufacturingDate">Vehicle manufacturing date.</param>
         public Vehicle(Guid id, string brand, string model, string licensePlate, DateTime manufacturingDate)
         {
-            if (id == Guid.Empty)
-            {
-                throw new DomainException("Vehicle identifier cannot be empty.");
-            }
-
-            if (string.IsNullOrWhiteSpace(brand))
-            {
-                throw new DomainException("Brand required.");
-            }
-
-            if (string.IsNullOrWhiteSpace(model))
-            {
-                throw new DomainException("Model required.");
-            }
-
-            if (string.IsNullOrWhiteSpace(licensePlate))
-            {
-                throw new DomainException("license plate required.");
-            }
-
-            if (manufacturingDate > DateTime.UtcNow)
-            {
-                throw new DomainException("Manufacturing date cannot be in the future.");
-            }
-
-            var oldest = DateTime.UtcNow.AddYears(-MaxFleetAgeInYears);
-            if (manufacturingDate < oldest)
-            {
-                throw new DomainException(
-                    $"Vehicle have more than {MaxFleetAgeInYears}. Manufacturing date must be after {oldest:yyyy-MM-dd}.");
-            }
+            ValidateEmptyId(id);
+            ValidateEmptyString(brand, nameof(brand));
+            ValidateEmptyString(model, nameof(model));
+            ValidateEmptyString(licensePlate, nameof(licensePlate));
+            ValidateManufacturingDate(manufacturingDate);
 
             Id = id;
             Brand = brand;
@@ -88,8 +62,67 @@ namespace GtMotive.Estimate.Microservice.Domain.Entities
         public DateTime ManufacturingDate { get; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the vehicle is available.
+        /// Gets a value indicating whether the vehicle is available.
+        /// Private setter to ensures changes only through domain.
         /// </summary>
-        public bool IsAvailable { get; set; }
+        public bool IsAvailable { get; private set; }
+
+        /// <summary>
+        /// Marks vehicle rented.
+        /// </summary>
+        public void MarkAsRented()
+        {
+            if (!IsAvailable)
+            {
+                throw new DomainException($"Vehicle '{LicensePlate}' isn't available.");
+            }
+
+            IsAvailable = false;
+        }
+
+        /// <summary>
+        /// Marks the vehicle available.
+        /// </summary>
+        public void MarkAsAvailable()
+        {
+            if (IsAvailable)
+            {
+                throw new DomainException($"Vehicle '{LicensePlate}' is already available.");
+            }
+
+            IsAvailable = true;
+        }
+
+        private static void ValidateEmptyId(Guid id)
+        {
+            if (id == Guid.Empty)
+            {
+                throw new DomainException("Vehicle identifier can't be empty.");
+            }
+        }
+
+        private static void ValidateEmptyString(string value, string paramName)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                throw new DomainException($"{paramName} is required and can't be empty.");
+            }
+        }
+
+        private static void ValidateManufacturingDate(DateTime manufacturingDate)
+        {
+            if (manufacturingDate > DateTime.UtcNow)
+            {
+                throw new DomainException("Vehicle manufacturing date can't be in the future.");
+            }
+
+            var oldestAllowed = DateTime.UtcNow.AddYears(-MaxFleetAgeInYears);
+            if (manufacturingDate < oldestAllowed)
+            {
+                throw new DomainException(
+                    $"Vehicle can't have more than {MaxFleetAgeInYears} years. " +
+                    $"Max years allowed: {MaxFleetAgeInYears}.");
+            }
+        }
     }
 }

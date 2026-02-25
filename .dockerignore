@@ -1,0 +1,17 @@
+**/.git
+**/.vs
+**/.vscode
+**/bin
+**/obj
+**/node_modules
+**/.idea
+**/TestResults
+**/*.user
+**/*.suo
+**/Thumbs.db
+**/.DS_Store
+**/docker-compose*.yml
+**/Dockerfile
+**/*.md
+**/requests.http
+test/load/
