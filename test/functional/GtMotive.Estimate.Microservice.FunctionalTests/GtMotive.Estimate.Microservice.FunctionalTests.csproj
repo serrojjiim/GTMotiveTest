@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFramework>net9.0</TargetFramework>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <NoWarn>1591</NoWarn>
+        <NoWarn>$(NoWarn);SA1600;SA1601;CS1591</NoWarn>
         <IsPackable>false</IsPackable>
     </PropertyGroup>
 
